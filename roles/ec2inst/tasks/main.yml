@@ -1,0 +1,40 @@
+---
+# create k8s master instance
+  - name: 'Create K8s master'
+    amazon.aws.ec2_instance:
+      name: "k8smaster"
+      vpc_subnet_id: "{{ subnetid }}"
+      instance_type: "{{ instancetype }}"
+      key_name: "{{ key_name }}"
+      security_group: "{{ securitygroupid }}"
+      count: "{{ mastercount }}"
+      region: "{{ region}}"
+      network:
+        assign_public_ip: true
+      volumes:
+        - device_name: "{{ volumelabel }}"
+          ebs:
+            volume_size: 20
+            delete_on_termination: true
+      image_id: "{{ ami }}"            
+      state: present
+
+# create k8s client instances
+  - name: 'Create K8s client'
+    amazon.aws.ec2_instance:
+      name: "k8sclient"
+      vpc_subnet_id: "{{ subnetid }}"
+      instance_type: "{{ instancetype }}"
+      key_name: "{{ key_name }}"
+      security_group: "{{ securitygroupid }}"
+      count: "{{ clientcount }}"
+      region: "{{ region}}"
+      network:
+        assign_public_ip: true
+      volumes:
+        - device_name: "{{ volumelabel }}"
+          ebs:
+            volume_size: 20
+            delete_on_termination: true
+      image_id: "{{ ami }}"            
+      state: present
