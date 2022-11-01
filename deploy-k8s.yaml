@@ -4,4 +4,6 @@
     become: yes
     roles:
       #- ec2key 
-      - ec2inst
+      #- ec2inst
+      #- docker
+      - kubernetes

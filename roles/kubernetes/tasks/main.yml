@@ -1,0 +1,21 @@
+---
+# tasks file for kubernetes
+  - name: "Add Kubernetes GPG apt key"
+    ansible.builtin.apt_key:
+      url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: 'Add Docker apt repository'  
+    ansible.builtin.apt_repository:
+      repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: 'Install Kubernetes'
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+    with_items: "{{ kubernetes_dependencies }}"
+    when: ansible_distribution == 'Ubuntu'
