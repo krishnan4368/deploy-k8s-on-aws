@@ -12,7 +12,8 @@
       count: "{{ mastercount }}"
       region: "{{ region}}"
       tags:
-        Env: development     
+        Env: development  
+        Role: master   
       network:
         assign_public_ip: true
       volumes:
@@ -34,7 +35,8 @@
       count: "{{ clientcount }}"
       region: "{{ region}}"
       tags:
-        Env: development      
+        Env: development  
+        Role: client    
       network:
         assign_public_ip: true
       volumes:

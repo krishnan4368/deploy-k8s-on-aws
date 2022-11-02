@@ -7,3 +7,5 @@
   keyed_groups:
     - key: tags.Env
       prefix: tag_Env
+    - key: tags.Role
+      prefix: tag_Role

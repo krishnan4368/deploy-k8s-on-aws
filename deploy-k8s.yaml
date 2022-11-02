@@ -10,10 +10,10 @@
       - "docker"
       - "kubernetes"
 
-  - hosts: tag_Name_k8smaster
+  - hosts: tag_Role_master
     roles:
       - "k8s-master"
 
-  - hosts: tag_Name_k8sclients
+  - hosts: tag_Role_client
     roles:
       - "k8s-slaves"
