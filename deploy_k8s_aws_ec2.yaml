@@ -1,10 +1,11 @@
 ---
   - hosts: remote
+    become: yes
     roles:
       - "ec2key"
       - "ec2inst"
 
-  - hosts: tag_Group_cluster
+  - hosts: tag_Env_k8s_master
     roles:
       - "docker"
       - "kubernetes"
