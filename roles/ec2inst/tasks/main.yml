@@ -1,5 +1,7 @@
 ---
-# create k8s master instance
+# task to deploy ec2 instances fork8s cluster on AWS
+
+  # create k8s master instance
   - name: 'Create K8s master'
     amazon.aws.ec2_instance:
       name: "k8smaster"
@@ -18,8 +20,10 @@
             delete_on_termination: true
       image_id: "{{ ami }}"            
       state: present
-
-# create k8s client instances
+      instance_tags:
+        Name: k8s_master
+        Group: cluster
+  # create k8s client instances
   - name: 'Create K8s client'
     amazon.aws.ec2_instance:
       name: "k8sclient"
@@ -38,3 +42,6 @@
             delete_on_termination: true
       image_id: "{{ ami }}"            
       state: present
+      instance_tags:
+        Name: k8s_slaves
+        Group: cluster

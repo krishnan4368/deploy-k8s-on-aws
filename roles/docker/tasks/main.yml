@@ -1,5 +1,7 @@
 ---
 # tasks file for docker
+
+  # install dependencies for project
   - name: "installdependencies"
     apt:
       name: "{{ item }}"
@@ -8,16 +10,19 @@
     with_items: "{{ common_dependencies }}"
     when: ansible_distribution == "Ubuntu"
     
+  # add docker GPG key  
   - name: "Add Docker GPG apt key"
     ansible.builtin.apt_key:
       url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
       state: present
 
+  # add docker apt repository
   - name: 'Add Docker apt repository'  
     ansible.builtin.apt_repository:
       repo: "deb https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
       state: present
 
+  # install docker
   - name: 'Install Docker'
     apt:
       name: "{{ item }}"
@@ -25,3 +30,36 @@
       update_cache: yes
     with_items: "{{ docker_dependencies }}"
     when: ansible_distribution == 'Ubuntu'
+
+  # start docker service
+  - name: "Starting the Docker Services"
+    service:
+      name: docker
+      state: started
+      enabled: yes
+    register: service_status
+
+  # check docker service status
+  - name: "Service Status"
+    debug:
+      msg: "Docker Service Code -> {{ service_status.state }}"
+  
+  # configure kubeadm to pull images
+  - name: "Pulling docker images"
+    command: "kubeadm config images pull"
+
+  #Changing the driver of docker from the cgroupfs to systemd
+  - name: "Change the driver in the docker"
+    copy:
+      content: |
+            {
+                "exec-opts": ["native.cgroupdriver=systemd"]
+            }
+      dest: /etc/docker/daemon.json
+    register: driver_change
+
+  - name: "Driver Change Info"
+    when: driver_change.changed == true
+    debug:
+      msg: "Doess Docker Driver Changed ? -> {{ driver_change.failed }}"
+    notify: restart docker

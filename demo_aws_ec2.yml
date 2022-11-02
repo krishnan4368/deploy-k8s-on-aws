@@ -1,0 +1,16 @@
+---
+# demo.aws_ec2.yml
+plugin: amazon.aws.aws_ec2
+aws_access_key: AKIAVXIEYMZM3JEPTIOE
+aws_secret_key: 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
+region: 
+ - ap-south-1 
+keyed_groups:
+  - key: tags.Name
+    prefix: tag_Name_
+    separator: ""
+hostnames:
+  - ip-address
+  - dns-name
+  - tag:Name
+  - private-ip-address    
