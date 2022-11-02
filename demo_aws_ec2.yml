@@ -1,6 +1,6 @@
 ---
 # demo.aws_ec2.yml
-#ansible-inventory -i demo_aws_ec2.yml --graph
+# ansible-inventory -i demo_aws_ec2.yml --graph
 plugin: amazon.aws.aws_ec2
 aws_access_key: AKIAVXIEYMZM3JEPTIOE
 aws_secret_key: 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
@@ -9,4 +9,3 @@ region:
 keyed_groups:
   - key: tags.Env
     prefix: tag_Env_
-    separator: ""  
