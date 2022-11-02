@@ -49,19 +49,3 @@
   # configure kubeadm to pull images
   - name: "Pulling docker images"
     command: "kubeadm config images pull"
-
-  #Changing the driver of docker from the cgroupfs to systemd
-  - name: "Change the driver in the docker"
-    copy:
-      content: |
-            {
-                "exec-opts": ["native.cgroupdriver=systemd"]
-            }
-      dest: /etc/docker/daemon.json
-    register: driver_change
-
-  - name: "Driver Change Info"
-    when: driver_change.changed == true
-    debug:
-      msg: "Doess Docker Driver Changed ? -> {{ driver_change.failed }}"
-    notify: restart docker
