@@ -9,8 +9,11 @@ volumelabel: /dev/sda1
 mastercount: 1
 clientcount: 1
 cidr: 10.240.0.0/16
-awsaccesskey: AKIAVXIEYMZM3JEPTIOE
-awssecretkey: vB4MuxlEuI2+ZaRLmrUD4mX+mGPONotpKufAD8d3
+awsaccesskey: <replace with your aws acess key>
+awssecretkey: <replace wiht your secret>
+environment: development
+mastername: k8smaster
+slavename: k8sclient
 common_dependencies:
     - apt-transport-https 
     - ca-certificates 

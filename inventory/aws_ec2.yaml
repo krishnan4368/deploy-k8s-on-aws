@@ -6,4 +6,4 @@
   - ap-south-1 
   keyed_groups:
     - key: tags.Env
-      prefix: tag_Env_
+      prefix: tag_Env
