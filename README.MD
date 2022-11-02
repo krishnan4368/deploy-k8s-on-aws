@@ -8,4 +8,17 @@ apt-get update
 apt-get install python3 pyhton3-pip ansible awscli
 pip3 install boto boto3
 ```
-3. Replace access key and secret on file `./inventory/aws_ec2.yaml`
+3. Copy following content and Replace access key and secret with yours into file `./inventory/aws_ec2.yaml`
+```
+---
+  plugin: amazon.aws.aws_ec2
+  aws_access_key: <replace wiht your aws key>
+  aws_secret_key: <replace with your aws secret>
+  region: 
+  - ap-south-1 
+  keyed_groups:
+    - key: tags.Env
+      prefix: tag_Env
+    - key: tags.Role
+      prefix: tag_Role
+```      
