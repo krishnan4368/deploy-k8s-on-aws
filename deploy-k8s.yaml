@@ -1,0 +1,18 @@
+---
+  - hosts: remote
+    roles:
+      - "ec2key"
+      - "ec2inst"
+
+  - hosts: tag_Group_cluster
+    roles:
+      - "docker"
+      - "kubernetes"
+
+  - hosts: tag_Name_k8s_master
+    roles:
+      - "k8s-master"
+
+  - hosts: tag_Name_k8s_slaves
+    roles:
+      - "k8s-slaves"
