@@ -1,19 +1,19 @@
 ---
-  - hosts: remote
+  - hosts: localhost
     become: yes
     roles:
       - "ec2key"
       - "ec2inst"
 
-  - hosts: tag_Env_k8s_master
+  - hosts: tag_Env_development
     roles:
       - "docker"
       - "kubernetes"
 
-  - hosts: tag_Name_k8s_master
+  - hosts: tag_Name_k8smaster
     roles:
       - "k8s-master"
 
-  - hosts: tag_Name_k8s_slaves
+  - hosts: tag_Name_k8sclients
     roles:
       - "k8s-slaves"
