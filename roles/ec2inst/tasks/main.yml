@@ -1,14 +1,19 @@
 ---
-# create k8s master instance
+# task to deploy ec2 instances fork8s cluster on AWS
+
+  # create k8s master instance
   - name: 'Create K8s master'
     amazon.aws.ec2_instance:
-      name: "k8smaster"
+      name: k8smaster
       vpc_subnet_id: "{{ subnetid }}"
       instance_type: "{{ instancetype }}"
       key_name: "{{ key_name }}"
       security_group: "{{ securitygroupid }}"
       count: "{{ mastercount }}"
       region: "{{ region}}"
+      tags:
+        Env: development  
+        Role: master   
       network:
         assign_public_ip: true
       volumes:
@@ -19,16 +24,19 @@
       image_id: "{{ ami }}"            
       state: present
 
-# create k8s client instances
+  # create k8s client instances
   - name: 'Create K8s client'
     amazon.aws.ec2_instance:
-      name: "k8sclient"
+      name: k8sclients
       vpc_subnet_id: "{{ subnetid }}"
       instance_type: "{{ instancetype }}"
       key_name: "{{ key_name }}"
       security_group: "{{ securitygroupid }}"
       count: "{{ clientcount }}"
       region: "{{ region}}"
+      tags:
+        Env: development  
+        Role: client    
       network:
         assign_public_ip: true
       volumes:
@@ -38,3 +46,10 @@
             delete_on_termination: true
       image_id: "{{ ami }}"            
       state: present
+
+  - name: Waiting for the instances to launch
+    pause:
+      minutes: 1
+
+  - name: Refresh inventory to ensure new instances exist in inventory
+    meta: refresh_inventory

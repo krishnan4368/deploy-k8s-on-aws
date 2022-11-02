@@ -1,0 +1,3 @@
+hosts
+demo.aws_ec2.yml
+deploy_k8s_aws_ec2.yaml

@@ -1,0 +1,54 @@
+--- 
+  # initializing master
+  - name: 'initializing master'
+    shell: "kubeadm init --pod-network-cidr={{ cidr }} --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem --node-name=master"
+    ignore_errors: true
+  
+  # Creating the .kube directory
+  - name: "Creating .kube directory"
+    shell: "mkdir -p $HOME/.kube"
+
+  # Copying the /etc/k8s/admin.conf$HOME/.kube/config
+  - name: "Copying /etc/kubernetes/admin.conf $HOME/.kube/config"
+    shell: "sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
+
+  # Changing the owner permission of $HOME/.kube/config
+  - name: "changing owner permission"
+    shell: "sudo chown $(id -u):$(id -g) $HOME/.kube/config"
+
+  #Adding the Flannel Overlay NetWork for the Communication
+  - name: get flannel.yml file and overwrite the Network 
+    get_url:
+            url: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+            dest: $HOME/kube_flannel.yml
+
+  - name: Set network in the $HOME/kube-flannel.yml file
+    lineinfile:
+      path: $HOME/kube_flannel.yml
+      regexp: '\"Network\":*'
+      line: "      \"Network\": \"{{ cidr }}\","
+
+  - name: apply flannel
+    command: kubectl apply -f $HOME/kube_flannel.yml  
+    register: flannel_status
+
+  - name: Flannel Network Status
+    debug:
+            msg: "Flanner Network Status => {{ flannel_status.failed }}"  
+
+  # Genrate token to join that cluster
+  - name: "Generating Token"
+    shell: "kubeadm token create  --print-join-command"
+    register: token
+    ignore_errors: true
+
+  # print token
+  - name: "Command to join cluster as nodes"
+    debug:
+        msg: "{{ token['stdout'] }}"
+      
+  # save token for further use
+  - name: "host adding for storing token for further use"
+    add_host:
+            name: "token_master"
+            token: "{{ token.stdout }}"

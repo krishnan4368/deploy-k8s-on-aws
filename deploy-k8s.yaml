@@ -1,7 +1,19 @@
 ---
-  - name: "Deploy K8s on AWS"
-    hosts: all
+  - hosts: localhost
     become: yes
     roles:
-      #- ec2key 
-      - ec2inst
+      - "ec2key"
+      - "ec2inst"
+
+  - hosts: tag_Env_development
+    roles:
+      - "docker"
+      - "kubernetes"
+
+  - hosts: tag_Role_master
+    roles:
+      - "k8s-master"
+
+  - hosts: tag_Role_client
+    roles:
+      - "k8s-slaves"
