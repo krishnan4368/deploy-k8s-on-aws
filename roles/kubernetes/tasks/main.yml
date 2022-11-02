@@ -45,7 +45,3 @@
 
   - name: "modify kernel parameters at runtime"
     shell: "sysctl --system"  
-
-  # configure kubeadm to pull images
-  - name: "Pulling docker images"
-    command: "kubeadm config images pull"
