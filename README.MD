@@ -5,8 +5,9 @@ Requirements:
 2. Install following packages on your local machine
 ```
 apt-get update
-apt-get install python3 pyhton3-pip ansible awscli
+apt-get install python3 python3-pip ansible awscli
 pip3 install boto boto3
+ansible-galaxy collection install amazon.aws
 ```
 3. Copy following content and Replace access key and secret with yours into file `./inventory/aws_ec2.yaml`
 ```
