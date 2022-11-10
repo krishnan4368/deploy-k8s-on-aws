@@ -1,7 +1,7 @@
 ---
   - hosts: localhost
     become: yes
-     roles:
+    roles:
       - "ec2key"
       - "ec2inst"
 
@@ -10,7 +10,7 @@
     roles:
       - "common"
 
- - hosts: tag_Role_master
+  - hosts: tag_Role_master
     roles:
       - "k8s-master"
 
