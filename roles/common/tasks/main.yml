@@ -1,0 +1,131 @@
+---
+# common steps
+    # install common packages
+  - name: 'Installcommon packages'
+    apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items: "{{ common_dependencies }}"
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: 'Disabling swap'
+    command: swapoff -a
+
+  - name: 'set hostname on master'
+    ansible.builtin.hostname:
+      name: master
+      use: systemd
+    when: ansible_host == tag_Role_master
+
+  - name: 'load br_netfilter explicitly' 
+    command: modprobe overlay ; modprobe br_netfilter
+
+  - name: 'config iptables to view bridged traffic'
+    shell: |
+      cat << EOF | sudo tee /etc/modules-load.d/k8s.conf
+      overlay
+      br_netfilter
+      EOF
+
+# Setting bridge-nf-call-iptables = 1
+# - name: "Setting bridge-nf-call-iptables & ip6tables to 1"
+#    shell: | 
+#        echo "1"  > /proc/sys/net/bridge/bridge-nf-call-iptables
+#        echo "1"  > /proc/sys/net/bridge/bridge-nf-call-ip6tables
+    #changed_when: false
+
+# Setting sysctl params
+  - name: 'sysctl params required by setup, params persist across reboots'
+    shell: |
+      cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+      net.bridge.bridge-nf-call-iptables  = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.ipv4.ip_forward                 = 1
+      EOF
+
+  - name: "modify kernel parameters at runtime"
+    shell: "sysctl --system"  
+
+  # add kubernetes GPG key
+  - name: "Add Kubernetes GPG apt key"
+    ansible.builtin.apt_key:
+      url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  # add kubernetes APT repository
+  - name: 'Add kubernetes apt repository'  
+    ansible.builtin.apt_repository:
+      repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  # add CRI-O GPG key
+  - name: "fetch key for libcontainers-archive-keyring"
+    ansible.builtin.apt_key:
+      url: "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ OS }}/Release.key"
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: "fetch key for libcontainers-crio-archive-keyring"
+    ansible.builtin.apt_key:
+      url: "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ CRIO_VERSION }}/{{ OS }}/Release.key"
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  # add CRI-O APT repository
+  - name: 'Add libcontainers-archive apt repository'  
+    ansible.builtin.apt_repository:
+      repo: "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ OS }}/ /"
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: 'Add libcontainers-crio-archive apt repository'  
+    ansible.builtin.apt_repository:
+      repo: "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ CRIO_VERSION }}/{{ OS }}/ /"
+      state: present
+    when: ansible_distribution == 'Ubuntu'
+
+    # install kubernetes
+  - name: 'Installing Kubernetes'
+    apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items: "{{ kubernetes_dependencies }}"
+    when: ansible_distribution == 'Ubuntu'
+    # when state is present, hold flag is auto enabled.
+  
+  - name: 'Installing CRI-O'
+    apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items: "{{ crio_dependencies }}"
+    when: ansible_distribution == 'Ubuntu'
+    # when state is present, hold flag is auto enabled.
+
+  # start kubelet service
+  - name: "Starting the kubelet Services"
+    service:
+      name: kubelet
+      state: started
+      enabled: yes
+    register: service_status
+
+  - name: "kubelet service Status"
+    debug:
+      msg: "kubelet Service Code -> {{ service_status.state }}"
+  
+    # start CRI-O service
+  - name: "Starting the CRI-O Services"
+    service:
+      name: crio
+      state: started
+      enabled: yes
+    register: service_status
+ 
+  - name: "CRI-O service Status"
+    debug:
+      msg: "CRI-O Service Code -> {{ service_status.state }}" 
