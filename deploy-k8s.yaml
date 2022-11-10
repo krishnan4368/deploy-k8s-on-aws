@@ -15,4 +15,4 @@
 
   - hosts: tag_Role_worker
     roles:
-      - "k8s-slaves"
+      - "k8s-worker"
