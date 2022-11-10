@@ -11,13 +11,6 @@
 
   - name: 'Disabling swap'
     command: swapoff -a
-
-  - name: 'set hostname on master'
-    ansible.builtin.hostname:
-      name: master
-      use: systemd
-    when: ansible_host == tag_Role_master
-
   
   - name: 'load br_netfilter explicitly' 
     command: modprobe overlay ; modprobe br_netfilter
