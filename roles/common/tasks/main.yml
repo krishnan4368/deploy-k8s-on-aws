@@ -13,7 +13,7 @@
     command: swapoff -a
   
   - name: 'load br_netfilter explicitly' 
-    command: modprobe overlay ; modprobe br_netfilter
+    command: modprobe br_netfilter
 
   - name: 'config iptables to view bridged traffic'
     shell: |
@@ -23,11 +23,11 @@
       EOF
 
 # Setting bridge-nf-call-iptables = 1
-# - name: "Setting bridge-nf-call-iptables & ip6tables to 1"
-#    shell: | 
-#        echo "1"  > /proc/sys/net/bridge/bridge-nf-call-iptables
-#        echo "1"  > /proc/sys/net/bridge/bridge-nf-call-ip6tables
-    #changed_when: false
+  - name: "Setting bridge-nf-call-iptables & ip6tables to 1"
+    shell: | 
+      echo "1"  > /proc/sys/net/bridge/bridge-nf-call-iptables
+      echo "1"  > /proc/sys/net/bridge/bridge-nf-call-ip6tables
+    changed_when: false
 
 # Setting sysctl params
   - name: 'sysctl params required by setup, params persist across reboots'
