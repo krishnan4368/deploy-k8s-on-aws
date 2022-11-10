@@ -13,6 +13,6 @@
     roles:
       - "k8s-master"
 
-  - hosts: tag_Role_client
+  - hosts: tag_Role_worker
     roles:
       - "k8s-slaves"
