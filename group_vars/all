@@ -1,11 +1,11 @@
 ---
-region: ap-south-1
+region: <region>
 master_instance_type: t2.medium
 worker_instance_type: t2.micro
 ami: ami-062df10d14676e201
-key_name: my_k8s_key
-subnetid: subnet-561ef63d
-securitygroupid: sg-0656ca9a3847842dd
+key_name: <your_key_name>
+subnetid: <your_subnet_ID>
+securitygroupid: <your_security_group_ID>
 volumelabel: /dev/sda1
 master_count: 1
 worker_count: 2
