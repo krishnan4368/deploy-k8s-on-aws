@@ -1,1 +1,1 @@
-folder to keep newly created key
+To keep newly created ssh key for accessing cluster
