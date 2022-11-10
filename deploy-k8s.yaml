@@ -7,13 +7,12 @@
 
   - hosts: tag_Env_development
     roles:
-      - "docker"
-      - "kubernetes"
+      - "common"
 
   - hosts: tag_Role_master
     roles:
       - "k8s-master"
 
-  - hosts: tag_Role_client
+  - hosts: tag_Role_worker
     roles:
-      - "k8s-slaves"
+      - "k8s-worker"

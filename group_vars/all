@@ -1,13 +1,14 @@
 ---
 region: ap-south-1
-instancetype: t2.micro
+master_instance_type: t2.medium
+worker_instance_type: t2.micro
 ami: ami-062df10d14676e201
 key_name: my_k8s_key
 subnetid: subnet-561ef63d
 securitygroupid: sg-0656ca9a3847842dd
 volumelabel: /dev/sda1
-mastercount: 1
-clientcount: 1
+master_count: 1
+worker_count: 2
 cidr: 10.240.0.0/16
 common_dependencies:
     - apt-transport-https 
@@ -15,11 +16,12 @@ common_dependencies:
     - curl 
     - gnupg 
     - lsb-release
-docker_dependencies:
-    - docker-ce 
-    - docker-ce-cli 
-    - containerd.io
+crio_dependencies:
+    - cri-o 
+    - cri-o-runc
 kubernetes_dependencies:
     - kubelet
     - kubeadm 
     - kubectl
+OS: xUbuntu_22.04
+CRIO_VERSION: 1.23

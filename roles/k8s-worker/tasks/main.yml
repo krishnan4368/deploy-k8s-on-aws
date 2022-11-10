@@ -1,0 +1,15 @@
+---
+# tasks for k8s-slaves
+
+  #Join Cluster Now
+  - name: Retrive the Token
+    debug:
+      msg: "{{ hostvars['token_master']['token'] }}"
+    register: token
+
+  - name: Join cluster
+    command: "{{ token.msg }}"  
+    register: result
+    
+  - debug: 
+      msg: "Cluster joining status: {{ result.stdout }}"

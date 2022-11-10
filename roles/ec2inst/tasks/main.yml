@@ -4,12 +4,12 @@
   # create k8s master instance
   - name: 'Create K8s master'
     amazon.aws.ec2_instance:
-      name: k8smaster
+      name: k8s-master
       vpc_subnet_id: "{{ subnetid }}"
-      instance_type: "{{ instancetype }}"
+      instance_type: "{{ master_instance_type }}"
       key_name: "{{ key_name }}"
       security_group: "{{ securitygroupid }}"
-      count: "{{ mastercount }}"
+      count: "{{ master_count }}"
       region: "{{ region}}"
       tags:
         Env: development  
@@ -27,16 +27,16 @@
   # create k8s client instances
   - name: 'Create K8s client'
     amazon.aws.ec2_instance:
-      name: k8sclients
+      name: k8s-worker
       vpc_subnet_id: "{{ subnetid }}"
-      instance_type: "{{ instancetype }}"
+      instance_type: "{{ worker_instance_type }}"
       key_name: "{{ key_name }}"
       security_group: "{{ securitygroupid }}"
-      count: "{{ clientcount }}"
+      count: "{{ worker_count }}"
       region: "{{ region}}"
       tags:
         Env: development  
-        Role: client    
+        Role: worker 
       network:
         assign_public_ip: true
       volumes:
