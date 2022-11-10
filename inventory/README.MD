@@ -1,1 +1,1 @@
-for dynamic inventory
+To keep aws ec2 dynamic inventory
