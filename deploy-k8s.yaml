@@ -5,8 +5,7 @@
       - "ec2key"
       - "ec2inst"
 
-  - hosts: "tag_Env_development"
-    become: yes
+  - hosts: tag_Env_development
     roles:
       - "common"
 
