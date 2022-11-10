@@ -29,7 +29,7 @@
     amazon.aws.ec2_instance:
       name: k8s-worker
       vpc_subnet_id: "{{ subnetid }}"
-      instance_type: "{{ slave_instance_type }}"
+      instance_type: "{{ worker_instance_type }}"
       key_name: "{{ key_name }}"
       security_group: "{{ securitygroupid }}"
       count: "{{ worker_count }}"
@@ -52,4 +52,4 @@
       minutes: 1
 
   - name: Refresh inventory to ensure new instances exist in inventory
-    meta: Refresh_inventory
+    meta: refresh_inventory

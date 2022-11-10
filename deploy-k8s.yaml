@@ -1,16 +1,16 @@
 ---
   - hosts: localhost
     become: yes
-    roles:
+     roles:
       - "ec2key"
       - "ec2inst"
 
-  - hosts: tag_Env_development
+  - hosts: "tag_Env_development"
+    become: yes
     roles:
-      - "docker"
-      - "kubernetes"
+      - "common"
 
-  - hosts: tag_Role_master
+ - hosts: tag_Role_master
     roles:
       - "k8s-master"
 
